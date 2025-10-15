@@ -1,20 +1,33 @@
-import { useState } from 'react';
+import { CipherState } from '../types/cipher';
 
 const OUTER_RING = 'ABCDEFGHILMNOPQRSTVXZ1234';
 const INNER_RING = 'abcdefghilmnopqrstuvxyz&';
 
-export default function AlbertiDisk() {
-  const [outerRotation, setOuterRotation] = useState(0);
-  const [innerRotation, setInnerRotation] = useState(0);
-  const [ciphertext, setCiphertext] = useState('');
-  const [mode, setMode] = useState<'encrypt' | 'decrypt'>('decrypt');
+interface AlbertiDiskProps {
+  state: CipherState['alberti'];
+  setState: React.Dispatch<React.SetStateAction<CipherState>>;
+}
+
+export default function AlbertiDisk({ state, setState }: AlbertiDiskProps) {
+  const { outerRotation, innerRotation, ciphertext, mode } = state;
+
+  const handleStateChange = (newState: Partial<CipherState['alberti']>) => {
+    setState((prevState) => ({
+      ...prevState,
+      alberti: { ...prevState.alberti, ...newState }
+    }));
+  };
 
   const rotateOuter = (steps: number) => {
-    setOuterRotation((prev) => (prev + steps + OUTER_RING.length) % OUTER_RING.length);
+    handleStateChange({
+      outerRotation: (outerRotation + steps + OUTER_RING.length) % OUTER_RING.length
+    });
   };
 
   const rotateInner = (steps: number) => {
-    setInnerRotation((prev) => (prev + steps + INNER_RING.length) % INNER_RING.length);
+    handleStateChange({
+      innerRotation: (innerRotation + steps + INNER_RING.length) % INNER_RING.length
+    });
   };
 
   const getRotatedRing = (ring: string, rotation: number) => {
@@ -49,10 +62,10 @@ export default function AlbertiDisk() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+      <div className="bg-slate-800 rounded-xl shadow-sm border border-slate-700 p-6">
         <div className="flex flex-col lg:flex-row gap-6">
           <div className="flex-1">
-            <h3 className="text-sm font-semibold text-gray-700 mb-4">Визуализация дисков</h3>
+            <h3 className="text-sm font-semibold text-slate-300 mb-4">Визуализация дисков</h3>
 
             <div className="relative w-full max-w-md mx-auto aspect-square">
               <svg viewBox="0 0 400 400" className="w-full h-full">
@@ -66,8 +79,8 @@ export default function AlbertiDisk() {
                   cx="200"
                   cy="200"
                   r="180"
-                  fill="#f3f4f6"
-                  stroke="#9ca3af"
+                  fill="#334155"
+                  stroke="#475569"
                   strokeWidth="3"
                   filter="url(#shadow)"
                 />
@@ -83,7 +96,7 @@ export default function AlbertiDisk() {
                       y={y}
                       textAnchor="middle"
                       dominantBaseline="middle"
-                      className="text-lg font-bold fill-gray-800"
+                      className="text-lg font-bold fill-slate-200"
                     >
                       {char}
                     </text>
@@ -94,8 +107,8 @@ export default function AlbertiDisk() {
                   cx="200"
                   cy="200"
                   r="120"
-                  fill="#dbeafe"
-                  stroke="#3b82f6"
+                  fill="#475569"
+                  stroke="#64748b"
                   strokeWidth="3"
                   filter="url(#shadow)"
                 />
@@ -111,7 +124,7 @@ export default function AlbertiDisk() {
                       y={y}
                       textAnchor="middle"
                       dominantBaseline="middle"
-                      className="text-base font-bold fill-blue-900"
+                      className="text-base font-bold fill-slate-100"
                     >
                       {char}
                     </text>
@@ -123,37 +136,37 @@ export default function AlbertiDisk() {
                   y1="200"
                   x2="200"
                   y2="20"
-                  stroke="#ef4444"
+                  stroke="#f59e0b"
                   strokeWidth="2"
                   strokeDasharray="5,5"
                 />
-                <circle cx="200" cy="20" r="6" fill="#ef4444" />
+                <circle cx="200" cy="20" r="6" fill="#f59e0b" />
 
-                <circle cx="200" cy="200" r="15" fill="#1f2937" />
+                <circle cx="200" cy="200" r="15" fill="#1e293b" />
               </svg>
             </div>
 
             <div className="mt-6 space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-slate-300 mb-2">
                   Внешнее кольцо (сдвиг: {outerRotation})
                 </label>
                 <div className="flex gap-2">
                   <button
                     onClick={() => rotateOuter(-1)}
-                    className="flex-1 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                    className="flex-1 px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-500 transition-colors"
                   >
                     ← Влево
                   </button>
                   <button
-                    onClick={() => setOuterRotation(0)}
-                    className="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500 transition-colors"
+                    onClick={() => handleStateChange({ outerRotation: 0 })}
+                    className="px-4 py-2 bg-slate-700 text-white rounded-lg hover:bg-slate-600 transition-colors"
                   >
                     Сброс
                   </button>
                   <button
                     onClick={() => rotateOuter(1)}
-                    className="flex-1 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                    className="flex-1 px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-500 transition-colors"
                   >
                     Вправо →
                   </button>
@@ -161,25 +174,25 @@ export default function AlbertiDisk() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-slate-300 mb-2">
                   Внутреннее кольцо (сдвиг: {innerRotation})
                 </label>
                 <div className="flex gap-2">
                   <button
                     onClick={() => rotateInner(-1)}
-                    className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    className="flex-1 px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-500 transition-colors"
                   >
                     ← Влево
                   </button>
                   <button
-                    onClick={() => setInnerRotation(0)}
-                    className="px-4 py-2 bg-blue-400 text-white rounded-lg hover:bg-blue-500 transition-colors"
+                    onClick={() => handleStateChange({ innerRotation: 0 })}
+                    className="px-4 py-2 bg-slate-700 text-white rounded-lg hover:bg-slate-600 transition-colors"
                   >
                     Сброс
                   </button>
                   <button
                     onClick={() => rotateInner(1)}
-                    className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    className="flex-1 px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-500 transition-colors"
                   >
                     Вправо →
                   </button>
@@ -189,34 +202,34 @@ export default function AlbertiDisk() {
           </div>
 
           <div className="flex-1">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-slate-300 mb-2">
               Текст для {mode === 'encrypt' ? 'шифрования' : 'дешифрования'}
             </label>
             <textarea
               value={ciphertext}
-              onChange={(e) => setCiphertext(e.target.value.toUpperCase())}
+              onChange={(e) => handleStateChange({ ciphertext: e.target.value.toUpperCase() })}
               placeholder="Введите текст..."
               rows={8}
-              className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all resize-vertical font-mono text-sm"
+              className="w-full px-4 py-3 border-2 bg-slate-800 border-slate-600 rounded-lg focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400 outline-none transition-all resize-vertical font-mono text-sm text-slate-200"
             />
 
             <div className="mt-4 flex gap-2">
               <button
-                onClick={() => setMode('encrypt')}
+                onClick={() => handleStateChange({ mode: 'encrypt' })}
                 className={`flex-1 px-4 py-2 rounded-lg transition-colors ${
                   mode === 'encrypt'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    ? 'bg-yellow-400 text-slate-900'
+                    : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
                 }`}
               >
                 Шифрование
               </button>
               <button
-                onClick={() => setMode('decrypt')}
+                onClick={() => handleStateChange({ mode: 'decrypt' })}
                 className={`flex-1 px-4 py-2 rounded-lg transition-colors ${
                   mode === 'decrypt'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    ? 'bg-yellow-400 text-slate-900'
+                    : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
                 }`}
               >
                 Дешифрование
@@ -225,8 +238,8 @@ export default function AlbertiDisk() {
 
             {ciphertext && (
               <div className="mt-4">
-                <h4 className="text-sm font-semibold text-gray-700 mb-2">Результат:</h4>
-                <pre className="font-mono text-sm bg-gray-50 p-4 rounded-lg border-2 border-gray-300 whitespace-pre-wrap break-words">
+                <h4 className="text-sm font-semibold text-slate-300 mb-2">Результат:</h4>
+                <pre className="font-mono text-sm bg-slate-700 p-4 rounded-lg border-2 border-slate-600 whitespace-pre-wrap break-words">
                   {result}
                 </pre>
               </div>
@@ -235,20 +248,20 @@ export default function AlbertiDisk() {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
+      <div className="bg-slate-800 rounded-xl shadow-sm border border-slate-700 p-6">
+        <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wide mb-3">
           Текущее соответствие
         </h3>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <h4 className="text-xs font-semibold text-gray-600 mb-2">Внешнее → Внутреннее</h4>
-            <div className="font-mono text-xs bg-gray-50 p-3 rounded-lg">
+            <h4 className="text-xs font-semibold text-slate-300 mb-2">Внешнее → Внутреннее</h4>
+            <div className="font-mono text-xs bg-slate-700 p-3 rounded-lg">
               <div className="grid grid-cols-6 gap-2">
                 {OUTER_RING.split('').map((char, i) => (
                   <div key={i} className="text-center">
-                    <div className="font-bold text-gray-800">{char}</div>
-                    <div className="text-blue-600">↓</div>
-                    <div className="font-bold text-blue-800">
+                    <div className="font-bold text-slate-200">{char}</div>
+                    <div className="text-slate-400">↓</div>
+                    <div className="font-bold text-yellow-400">
                       {rotatedInner[i % INNER_RING.length]}
                     </div>
                   </div>
@@ -258,14 +271,14 @@ export default function AlbertiDisk() {
           </div>
 
           <div>
-            <h4 className="text-xs font-semibold text-gray-600 mb-2">Внутреннее → Внешнее</h4>
-            <div className="font-mono text-xs bg-blue-50 p-3 rounded-lg">
+            <h4 className="text-xs font-semibold text-slate-300 mb-2">Внутреннее → Внешнее</h4>
+            <div className="font-mono text-xs bg-slate-700 p-3 rounded-lg">
               <div className="grid grid-cols-6 gap-2">
                 {INNER_RING.split('').map((char, i) => (
                   <div key={i} className="text-center">
-                    <div className="font-bold text-blue-800">{char}</div>
-                    <div className="text-gray-600">↓</div>
-                    <div className="font-bold text-gray-800">{rotatedOuter[i]}</div>
+                    <div className="font-bold text-slate-200">{char}</div>
+                    <div className="text-slate-400">↓</div>
+                    <div className="font-bold text-yellow-400">{rotatedOuter[i]}</div>
                   </div>
                 ))}
               </div>
@@ -274,27 +287,27 @@ export default function AlbertiDisk() {
         </div>
       </div>
 
-      <div className="bg-blue-50 border border-blue-200 rounded-xl p-6">
-        <h3 className="text-sm font-semibold text-blue-900 mb-3">О диске Альберти</h3>
-        <ul className="space-y-2 text-sm text-blue-800">
+      <div className="bg-slate-800 border border-slate-700 rounded-xl p-6">
+        <h3 className="text-sm font-semibold text-slate-200 mb-3">О диске Альберти</h3>
+        <ul className="space-y-2 text-sm text-slate-300">
           <li className="flex items-start gap-2">
-            <span className="text-blue-600 font-bold">•</span>
-            <span>Изобретён Леоном Баттистой Альберти в 1467 году</span>
+            <span className="text-slate-400 font-bold">•</span>
+            <span>Изобретён <strong className="text-yellow-400">Леоном Баттистой Альберти</strong> в 1467 году</span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-blue-600 font-bold">•</span>
-            <span>Первый полиалфавитный шифр в истории</span>
+            <span className="text-slate-400 font-bold">•</span>
+            <span>Первый <strong className="text-yellow-400">полиалфавитный шифр</strong> в истории</span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-blue-600 font-bold">•</span>
+            <span className="text-slate-400 font-bold">•</span>
             <span>Внешний диск: 24 заглавные буквы + цифры</span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-blue-600 font-bold">•</span>
+            <span className="text-slate-400 font-bold">•</span>
             <span>Внутренний диск: 24 строчные буквы + символ &</span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-blue-600 font-bold">•</span>
+            <span className="text-slate-400 font-bold">•</span>
             <span>Буквы H, J, K, U, W, Y отсутствуют (латинский алфавит XV века)</span>
           </li>
         </ul>

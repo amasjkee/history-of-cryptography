@@ -1,10 +1,21 @@
-import { useState } from 'react';
 import { vigenereDecrypt } from '../utils/cipherUtils';
 import { calculateIndexOfCoincidence } from '../utils/frequencyAnalysis';
+import { CipherState } from '../types/cipher';
 
-export default function VigenereCipher() {
-  const [ciphertext, setCiphertext] = useState('');
-  const [key, setKey] = useState('');
+interface VigenereCipherProps {
+  state: CipherState['vigenere'];
+  setState: React.Dispatch<React.SetStateAction<CipherState>>;
+}
+
+export default function VigenereCipher({ state, setState }: VigenereCipherProps) {
+  const { ciphertext, key } = state;
+
+  const handleStateChange = (newState: Partial<CipherState['vigenere']>) => {
+    setState((prevState) => ({
+      ...prevState,
+      vigenere: { ...prevState.vigenere, ...newState }
+    }));
+  };
 
   const decrypted = vigenereDecrypt(ciphertext, key);
   const ic = calculateIndexOfCoincidence(ciphertext);
@@ -64,54 +75,54 @@ export default function VigenereCipher() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
+      <div className="bg-slate-800 rounded-xl shadow-sm border border-slate-700 p-6">
+        <label className="block text-sm font-semibold text-slate-300 mb-2">
           Зашифрованный текст
         </label>
         <textarea
           value={ciphertext}
-          onChange={(e) => setCiphertext(e.target.value.toUpperCase())}
+          onChange={(e) => handleStateChange({ ciphertext: e.target.value.toUpperCase() })}
           placeholder="Введите зашифрованный текст..."
           rows={4}
-          className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all resize-vertical font-mono text-sm"
+          className="w-full px-4 py-3 border-2 bg-slate-800 border-slate-600 rounded-lg focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400 outline-none transition-all resize-vertical font-mono text-sm text-slate-200"
         />
 
         <div className="mt-4">
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
+          <label className="block text-sm font-semibold text-slate-300 mb-2">
             Ключ
           </label>
           <input
             type="text"
             value={key}
-            onChange={(e) => setKey(e.target.value.toUpperCase())}
+            onChange={(e) => handleStateChange({ key: e.target.value.toUpperCase() })}
             placeholder="Введите ключ..."
-            className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all font-mono text-sm"
+            className="w-full px-4 py-3 border-2 bg-slate-800 border-slate-600 rounded-lg focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400 outline-none transition-all font-mono text-sm text-slate-200"
           />
         </div>
       </div>
 
       {ciphertext && key && (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
+        <div className="bg-slate-800 rounded-xl shadow-sm border border-slate-700 p-6">
+          <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wide mb-3">
             Расшифрованный текст
           </h3>
-          <pre className="font-mono text-sm bg-gray-50 p-4 rounded-lg whitespace-pre-wrap break-words">
+          <pre className="font-mono text-sm bg-slate-700 p-4 rounded-lg whitespace-pre-wrap break-words">
             {decrypted}
           </pre>
         </div>
       )}
 
       {ciphertext && (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
+        <div className="bg-slate-800 rounded-xl shadow-sm border border-slate-700 p-6">
+          <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wide mb-3">
             Анализ (метод Касиски)
           </h3>
 
-          <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-sm text-blue-900">
-              <span className="font-bold">Индекс совпадений:</span> {ic.toFixed(4)}
+          <div className="mb-4 p-4 bg-slate-700 border border-slate-600 rounded-lg">
+            <p className="text-sm text-slate-200">
+              <strong className="text-yellow-400">Индекс совпадений:</strong> {ic.toFixed(4)}
             </p>
-            <p className="text-xs text-blue-700 mt-1">
+            <p className="text-xs text-slate-400 mt-1">
               {ic > 0.06
                 ? 'Похоже на моноалфавитный шифр (простая замена или Цезарь)'
                 : ic > 0.04
@@ -122,15 +133,15 @@ export default function VigenereCipher() {
 
           {uniqueKeyLengths.length > 0 && (
             <div className="mb-4">
-              <h4 className="text-sm font-semibold text-gray-700 mb-2">
+              <h4 className="text-sm font-semibold text-slate-300 mb-2">
                 Предполагаемая длина ключа:
               </h4>
               <div className="flex flex-wrap gap-2">
                 {uniqueKeyLengths.map((len) => (
                   <button
                     key={len}
-                    onClick={() => setKey('A'.repeat(len))}
-                    className="px-3 py-1 bg-green-100 text-green-800 rounded-lg hover:bg-green-200 transition-colors text-sm font-medium"
+                    onClick={() => handleStateChange({ key: 'A'.repeat(len) })}
+                    className="px-3 py-1 bg-green-800 text-green-200 rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
                   >
                     {len} букв
                   </button>
@@ -141,22 +152,22 @@ export default function VigenereCipher() {
 
           {patterns.length > 0 && (
             <div>
-              <h4 className="text-sm font-semibold text-gray-700 mb-2">
+              <h4 className="text-sm font-semibold text-slate-300 mb-2">
                 Повторяющиеся паттерны:
               </h4>
               <div className="space-y-2">
                 {patterns.slice(0, 5).map((p, i) => (
-                  <div key={i} className="p-3 bg-gray-50 rounded-lg">
+                  <div key={i} className="p-3 bg-slate-700 rounded-lg">
                     <div className="flex items-center justify-between mb-1">
-                      <span className="font-mono font-bold text-sm">{p.pattern}</span>
-                      <span className="text-xs text-gray-600">
+                      <span className="font-mono font-bold text-sm text-yellow-400">{p.pattern}</span>
+                      <span className="text-xs text-slate-400">
                         {p.positions.length} раз(а)
                       </span>
                     </div>
-                    <p className="text-xs text-gray-600">
+                    <p className="text-xs text-slate-400">
                       Расстояния: {p.distances.join(', ')}
                     </p>
-                    <p className="text-xs text-gray-600">
+                    <p className="text-xs text-slate-400">
                       НОД: {findGCD(p.distances)}
                     </p>
                   </div>
@@ -167,28 +178,28 @@ export default function VigenereCipher() {
         </div>
       )}
 
-      <div className="bg-blue-50 border border-blue-200 rounded-xl p-6">
-        <h3 className="text-sm font-semibold text-blue-900 mb-3">Как взломать шифр Виженера</h3>
-        <ul className="space-y-2 text-sm text-blue-800">
+      <div className="bg-slate-800 border border-slate-700 rounded-xl p-6">
+        <h3 className="text-sm font-semibold text-slate-200 mb-3">Как взломать шифр Виженера</h3>
+        <ul className="space-y-2 text-sm text-slate-300">
           <li className="flex items-start gap-2">
-            <span className="text-blue-600 font-bold">1.</span>
-            <span>Найдите повторяющиеся последовательности в тексте</span>
+            <span className="text-slate-400 font-bold">1.</span>
+            <span>Найдите <strong className="text-yellow-400">повторяющиеся последовательности</strong> в тексте</span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-blue-600 font-bold">2.</span>
-            <span>Измерьте расстояния между повторениями</span>
+            <span className="text-slate-400 font-bold">2.</span>
+            <span>Измерьте <strong className="text-yellow-400">расстояния</strong> между повторениями</span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-blue-600 font-bold">3.</span>
-            <span>Найдите НОД расстояний - это вероятная длина ключа</span>
+            <span className="text-slate-400 font-bold">3.</span>
+            <span>Найдите <strong className="text-yellow-400">НОД</strong> расстояний - это вероятная длина ключа</span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-blue-600 font-bold">4.</span>
+            <span className="text-slate-400 font-bold">4.</span>
             <span>Разделите текст на колонки по длине ключа</span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-blue-600 font-bold">5.</span>
-            <span>Примените частотный анализ к каждой колонке отдельно</span>
+            <span className="text-slate-400 font-bold">5.</span>
+            <span>Примените <strong className="text-yellow-400">частотный анализ</strong> к каждой колонке отдельно</span>
           </li>
         </ul>
       </div>

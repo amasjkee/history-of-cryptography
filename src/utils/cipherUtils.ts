@@ -134,3 +134,76 @@ export function affineDecrypt(ciphertext: string, a: number, b: number): string 
     })
     .join('');
 }
+
+function generatePlayfairTable(key: string): string[][] {
+  const table: string[][] = Array.from({ length: 5 }, () => Array(5).fill(''));
+  const sanitizedKey = key.toUpperCase().replace(/[^A-Z]/g, '').replace(/J/g, 'I');
+  const keyChars = [...new Set(sanitizedKey.split(''))];
+  const alphabet = 'ABCDEFGHIKLMNOPQRSTUVWXYZ';
+  const remainingChars = [...alphabet].filter((c) => !keyChars.includes(c));
+  const allChars = keyChars.concat(remainingChars);
+
+  for (let i = 0; i < 5; i++) {
+    for (let j = 0; j < 5; j++) {
+      table[i][j] = allChars[i * 5 + j];
+    }
+  }
+  return table;
+}
+
+function findChar(table: string[][], char: string): { row: number; col: number } {
+  for (let i = 0; i < 5; i++) {
+    for (let j = 0; j < 5; j++) {
+      if (table[i][j] === char) {
+        return { row: i, col: j };
+      }
+    }
+  }
+  return { row: -1, col: -1 };
+}
+
+export function playfairCipher(text: string, key: string, mode: 'encrypt' | 'decrypt'): string {
+  if (!key) return text;
+
+  const table = generatePlayfairTable(key);
+  let preparedText = text.toUpperCase().replace(/[^A-Z]/g, '').replace(/J/g, 'I');
+
+  if (mode === 'encrypt') {
+    let i = 0;
+    while (i < preparedText.length - 1) {
+      if (preparedText[i] === preparedText[i + 1]) {
+        preparedText = preparedText.slice(0, i + 1) + 'X' + preparedText.slice(i + 1);
+      }
+      i += 2;
+    }
+    if (preparedText.length % 2 !== 0) {
+      preparedText += 'X';
+    }
+  }
+
+  let result = '';
+  for (let i = 0; i < preparedText.length; i += 2) {
+    const char1 = preparedText[i];
+    const char2 = preparedText[i + 1];
+    const pos1 = findChar(table, char1);
+    const pos2 = findChar(table, char2);
+
+    let newChar1, newChar2;
+
+    if (pos1.row === pos2.row) {
+      const offset = mode === 'encrypt' ? 1 : -1;
+      newChar1 = table[pos1.row][(pos1.col + offset + 5) % 5];
+      newChar2 = table[pos2.row][(pos2.col + offset + 5) % 5];
+    } else if (pos1.col === pos2.col) {
+      const offset = mode === 'encrypt' ? 1 : -1;
+      newChar1 = table[(pos1.row + offset + 5) % 5][pos1.col];
+      newChar2 = table[(pos2.row + offset + 5) % 5][pos2.col];
+    } else {
+      newChar1 = table[pos1.row][pos2.col];
+      newChar2 = table[pos2.row][pos1.col];
+    }
+    result += newChar1 + newChar2;
+  }
+
+  return result;
+}

@@ -28,8 +28,8 @@ export default function CaesarCipher({ state, setState }: CaesarCipherProps) {
 
   return (
     <div className="space-y-6">
-      <div className="bg-slate-800 rounded-xl shadow-sm border border-slate-700 p-6">
-        <label className="block text-sm font-semibold text-slate-300 mb-2">
+      <div className="bg-card rounded-xl shadow-sm border border-border p-6">
+        <label className="block text-sm font-semibold text-muted-foreground mb-2">
           Зашифрованный текст
         </label>
         <textarea
@@ -37,12 +37,12 @@ export default function CaesarCipher({ state, setState }: CaesarCipherProps) {
           onChange={(e) => handleStateChange({ ciphertext: e.target.value.toUpperCase() })}
           placeholder="Введите зашифрованный текст..."
           rows={4}
-          className="w-full px-4 py-3 border-2 bg-slate-800 border-slate-600 rounded-lg focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400 outline-none transition-all resize-vertical font-mono text-sm text-slate-200"
+          className="w-full px-4 py-3 border-2 bg-background border-border rounded-lg focus:border-primary focus:ring-2 focus:ring-primary outline-none transition-all resize-vertical font-mono text-sm text-foreground"
         />
 
         <div className="mt-4 space-y-4">
           <div>
-            <label className="block text-sm font-semibold text-slate-300 mb-2">
+            <label className="block text-sm font-semibold text-muted-foreground mb-2">
               Сдвиг: {shift}
             </label>
             <input
@@ -51,9 +51,9 @@ export default function CaesarCipher({ state, setState }: CaesarCipherProps) {
               max="25"
               value={shift}
               onChange={(e) => handleStateChange({ shift: Number(e.target.value) })}
-              className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-yellow-400"
+              className="w-full h-2 bg-secondary rounded-lg appearance-none cursor-pointer accent-primary"
             />
-            <div className="flex justify-between text-xs text-slate-400 mt-1">
+            <div className="flex justify-between text-xs text-muted-foreground mt-1">
               <span>0</span>
               <span>13</span>
               <span>25</span>
@@ -65,27 +65,27 @@ export default function CaesarCipher({ state, setState }: CaesarCipherProps) {
               type="checkbox"
               checked={showAllShifts}
               onChange={(e) => setShowAllShifts(e.target.checked)}
-              className="w-4 h-4 accent-yellow-400"
+              className="w-4 h-4 accent-primary"
             />
-            <span className="text-sm text-slate-300">Показать все варианты (перебор)</span>
+            <span className="text-sm text-muted-foreground">Показать все варианты (перебор)</span>
           </label>
         </div>
       </div>
 
       {ciphertext && !showAllShifts && (
-        <div className="bg-slate-800 rounded-xl shadow-sm border border-slate-700 p-6">
-          <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wide mb-3">
+        <div className="bg-card rounded-xl shadow-sm border border-border p-6">
+          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">
             Расшифрованный текст (сдвиг {shift})
           </h3>
-          <pre className="font-mono text-sm bg-slate-700 p-4 rounded-lg whitespace-pre-wrap break-words">
+          <pre className="font-mono text-sm bg-secondary p-4 rounded-lg whitespace-pre-wrap break-words">
             {decrypted}
           </pre>
         </div>
       )}
 
       {ciphertext && showAllShifts && (
-        <div className="bg-slate-800 rounded-xl shadow-sm border border-slate-700 p-6">
-          <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wide mb-3">
+        <div className="bg-card rounded-xl shadow-sm border border-border p-6">
+          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">
             Все возможные сдвиги
           </h3>
           <div className="space-y-3 max-h-[600px] overflow-y-auto">
@@ -94,15 +94,15 @@ export default function CaesarCipher({ state, setState }: CaesarCipherProps) {
                 key={s}
                 className={`p-3 rounded-lg border-2 transition-all cursor-pointer ${
                   s === shift
-                    ? 'bg-slate-700 border-yellow-400'
-                    : 'bg-slate-800 border-slate-600 hover:border-slate-500'
+                    ? 'bg-secondary border-primary'
+                    : 'bg-background border-border hover:border-secondary'
                 }`}
                 onClick={() => handleStateChange({ shift: s })}
               >
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs font-bold text-slate-300">Сдвиг {s}</span>
+                  <span className="text-xs font-bold text-muted-foreground">Сдвиг {s}</span>
                   {s === shift && (
-                    <span className="text-xs bg-yellow-400 text-slate-900 px-2 py-1 rounded">
+                    <span className="text-xs bg-primary text-primary-foreground px-2 py-1 rounded">
                       Выбрано
                     </span>
                   )}
@@ -116,24 +116,24 @@ export default function CaesarCipher({ state, setState }: CaesarCipherProps) {
         </div>
       )}
 
-      <div className="bg-slate-800 border border-slate-700 rounded-xl p-6">
-        <h3 className="text-sm font-semibold text-slate-200 mb-3">Как взломать шифр Цезаря</h3>
-        <ul className="space-y-2 text-sm text-slate-300">
+      <div className="bg-card border border-border rounded-xl p-6">
+        <h3 className="text-sm font-semibold text-foreground mb-3">Как взломать шифр Цезаря</h3>
+        <ul className="space-y-2 text-sm text-muted-foreground">
           <li className="flex items-start gap-2">
-            <span className="text-slate-400 font-bold">1.</span>
+            <span className="text-muted-foreground font-bold">1.</span>
             <span>Используйте перебор всех 26 возможных сдвигов</span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-slate-400 font-bold">2.</span>
+            <span className="text-muted-foreground font-bold">2.</span>
             <span>Ищите осмысленные слова в расшифрованных вариантах</span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-slate-400 font-bold">3.</span>
-            <span><strong className="text-yellow-400">ROT13</strong> - это шифр Цезаря со сдвигом 13</span>
+            <span className="text-muted-foreground font-bold">3.</span>
+            <span><strong className="text-primary">ROT13</strong> - это шифр Цезаря со сдвигом 13</span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-slate-400 font-bold">4.</span>
-            <span><strong className="text-yellow-400">Частотный анализ</strong>: самая частая буква вероятно <strong className="text-yellow-400">E</strong> (англ.) или <strong className="text-yellow-400">О</strong> (рус.)</span>
+            <span className="text-muted-foreground font-bold">4.</span>
+            <span><strong className="text-primary">Частотный анализ</strong>: самая частая буква вероятно <strong className="text-primary">E</strong> (англ.) или <strong className="text-primary">О</strong> (рус.)</span>
           </li>
         </ul>
       </div>

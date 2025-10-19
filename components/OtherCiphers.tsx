@@ -14,7 +14,7 @@ export default function OtherCiphers({ state, setState }: OtherCiphersProps) {
 
   return (
     <div className="space-y-6">
-      <div className="bg-slate-800 rounded-xl shadow-sm border border-slate-700 p-6">
+      <div className="bg-card rounded-xl shadow-sm border border-border p-6">
         <div className="flex flex-wrap gap-2 mb-6">
           {[
             { id: 'atbash', label: 'Атбаш' },
@@ -29,8 +29,8 @@ export default function OtherCiphers({ state, setState }: OtherCiphersProps) {
               onClick={() => setActiveTab(tab.id as CipherTab)}
               className={`px-4 py-2 rounded-lg transition-colors font-medium ${
                 activeTab === tab.id
-                  ? 'bg-yellow-400 text-slate-900'
-                  : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-secondary text-muted-foreground hover:bg-secondary/80'
               }`}
             >
               {tab.label}
@@ -67,7 +67,7 @@ function AtbashCipher({ state, setState }: SubCipherProps<'atbash'>) {
   return (
     <div className="space-y-4">
       <div>
-        <label className="block text-sm font-semibold text-slate-300 mb-2">
+        <label className="block text-sm font-semibold text-muted-foreground mb-2">
           Текст
         </label>
         <textarea
@@ -75,26 +75,26 @@ function AtbashCipher({ state, setState }: SubCipherProps<'atbash'>) {
           onChange={(e) => handleTextChange(e.target.value.toUpperCase())}
           placeholder="Введите текст..."
           rows={4}
-          className="w-full px-4 py-3 border-2 bg-slate-800 border-slate-600 rounded-lg focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400 outline-none transition-all resize-vertical font-mono text-sm text-slate-200"
+          className="w-full px-4 py-3 border-2 bg-background border-border rounded-lg focus:border-primary focus:ring-2 focus:ring-primary outline-none transition-all resize-vertical font-mono text-sm text-foreground"
         />
       </div>
 
       {text && (
         <div>
-          <label className="block text-sm font-semibold text-slate-300 mb-2">
+          <label className="block text-sm font-semibold text-muted-foreground mb-2">
             Результат (Атбаш)
           </label>
-          <pre className="font-mono text-sm bg-slate-700 p-4 rounded-lg border-2 border-slate-600 whitespace-pre-wrap break-words">
+          <pre className="font-mono text-sm bg-secondary p-4 rounded-lg border-2 border-border whitespace-pre-wrap break-words">
             {result}
           </pre>
         </div>
       )}
 
-      <div className="bg-slate-700 border border-slate-600 rounded-lg p-4">
-        <h4 className="text-sm font-semibold text-slate-200 mb-2">Об Атбаше</h4>
-        <p className="text-sm text-slate-300">
-          Простейший шифр замены: первая буква алфавита меняется на последнюю (<strong className="text-yellow-400">A↔Z</strong>),
-          вторая на предпоследнюю (<strong className="text-yellow-400">B↔Y</strong>) и т.д. Шифрование и дешифрование идентичны.
+      <div className="bg-secondary border border-border rounded-lg p-4">
+        <h4 className="text-sm font-semibold text-foreground mb-2">Об Атбаше</h4>
+        <p className="text-sm text-muted-foreground">
+          Простейший шифр замены: первая буква алфавита меняется на последнюю (<strong className="text-primary">A↔Z</strong>),
+          вторая на предпоследнюю (<strong className="text-primary">B↔Y</strong>) и т.д. Шифрование и дешифрование идентичны.
         </p>
       </div>
     </div>
@@ -115,7 +115,7 @@ function RailFenceCipher({ state, setState }: SubCipherProps<'railfence'>) {
   return (
     <div className="space-y-4">
       <div>
-        <label className="block text-sm font-semibold text-slate-300 mb-2">
+        <label className="block text-sm font-semibold text-muted-foreground mb-2">
           Зашифрованный текст
         </label>
         <textarea
@@ -123,12 +123,12 @@ function RailFenceCipher({ state, setState }: SubCipherProps<'railfence'>) {
           onChange={(e) => handleStateChange({ ciphertext: e.target.value.toUpperCase() })}
           placeholder="Введите зашифрованный текст..."
           rows={4}
-          className="w-full px-4 py-3 border-2 bg-slate-800 border-slate-600 rounded-lg focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400 outline-none transition-all resize-vertical font-mono text-sm text-slate-200"
+          className="w-full px-4 py-3 border-2 bg-background border-border rounded-lg focus:border-primary focus:ring-2 focus:ring-primary outline-none transition-all resize-vertical font-mono text-sm text-foreground"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-semibold text-slate-300 mb-2">
+        <label className="block text-sm font-semibold text-muted-foreground mb-2">
           Количество рельсов: {rails}
         </label>
         <input
@@ -137,25 +137,25 @@ function RailFenceCipher({ state, setState }: SubCipherProps<'railfence'>) {
           max="10"
           value={rails}
           onChange={(e) => handleStateChange({ rails: Number(e.target.value) })}
-          className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-yellow-400"
+          className="w-full h-2 bg-secondary rounded-lg appearance-none cursor-pointer accent-primary"
         />
       </div>
 
       {ciphertext && (
         <div>
-          <label className="block text-sm font-semibold text-slate-300 mb-2">
+          <label className="block text-sm font-semibold text-muted-foreground mb-2">
             Расшифрованный текст
           </label>
-          <pre className="font-mono text-sm bg-slate-700 p-4 rounded-lg border-2 border-slate-600 whitespace-pre-wrap break-words">
+          <pre className="font-mono text-sm bg-secondary p-4 rounded-lg border-2 border-border whitespace-pre-wrap break-words">
             {decrypted}
           </pre>
         </div>
       )}
 
-      <div className="bg-slate-700 border border-slate-600 rounded-lg p-4">
-        <h4 className="text-sm font-semibold text-slate-200 mb-2">О шифре Rail Fence</h4>
-        <p className="text-sm text-slate-300">
-          Текст записывается <strong className="text-yellow-400">зигзагом</strong> по нескольким рельсам, затем читается построчно.
+      <div className="bg-secondary border border-border rounded-lg p-4">
+        <h4 className="text-sm font-semibold text-foreground mb-2">О шифре Rail Fence</h4>
+        <p className="text-sm text-muted-foreground">
+          Текст записывается <strong className="text-primary">зигзагом</strong> по нескольким рельсам, затем читается построчно.
           Для взлома попробуйте разное количество рельсов (обычно 2-5).
         </p>
       </div>
@@ -175,7 +175,7 @@ function AffineCipher({ state, setState }: SubCipherProps<'affine'>) {
   return (
     <div className="space-y-4">
       <div>
-        <label className="block text-sm font-semibold text-slate-300 mb-2">
+        <label className="block text-sm font-semibold text-muted-foreground mb-2">
           Зашифрованный текст
         </label>
         <textarea
@@ -183,19 +183,19 @@ function AffineCipher({ state, setState }: SubCipherProps<'affine'>) {
           onChange={(e) => handleStateChange({ ciphertext: e.target.value.toUpperCase() })}
           placeholder="Введите зашифрованный текст..."
           rows={4}
-          className="w-full px-4 py-3 border-2 bg-slate-800 border-slate-600 rounded-lg focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400 outline-none transition-all resize-vertical font-mono text-sm text-slate-200"
+          className="w-full px-4 py-3 border-2 bg-background border-border rounded-lg focus:border-primary focus:ring-2 focus:ring-primary outline-none transition-all resize-vertical font-mono text-sm text-foreground"
         />
       </div>
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-semibold text-slate-300 mb-2">
+          <label className="block text-sm font-semibold text-muted-foreground mb-2">
             Параметр a: {a}
           </label>
           <select
             value={a}
             onChange={(e) => handleStateChange({ a: Number(e.target.value) })}
-            className="w-full px-4 py-2 border-2 bg-slate-800 border-slate-600 rounded-lg focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400 outline-none text-slate-200"
+            className="w-full px-4 py-2 border-2 bg-background border-border rounded-lg focus:border-primary focus:ring-2 focus:ring-primary outline-none text-foreground"
           >
             {validAValues.map((val) => (
               <option key={val} value={val}>
@@ -203,11 +203,11 @@ function AffineCipher({ state, setState }: SubCipherProps<'affine'>) {
               </option>
             ))}
           </select>
-          <p className="text-xs text-slate-400 mt-1">Должно быть взаимно просто с 26</p>
+          <p className="text-xs text-muted-foreground mt-1">Должно быть взаимно просто с 26</p>
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-slate-300 mb-2">
+          <label className="block text-sm font-semibold text-muted-foreground mb-2">
             Параметр b: {b}
           </label>
           <input
@@ -216,26 +216,26 @@ function AffineCipher({ state, setState }: SubCipherProps<'affine'>) {
             max="25"
             value={b}
             onChange={(e) => handleStateChange({ b: Number(e.target.value) })}
-            className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-yellow-400"
+            className="w-full h-2 bg-secondary rounded-lg appearance-none cursor-pointer accent-primary"
           />
         </div>
       </div>
 
       {ciphertext && (
         <div>
-          <label className="block text-sm font-semibold text-slate-300 mb-2">
+          <label className="block text-sm font-semibold text-muted-foreground mb-2">
             Расшифрованный текст
           </label>
-          <pre className="font-mono text-sm bg-slate-700 p-4 rounded-lg border-2 border-slate-600 whitespace-pre-wrap break-words">
+          <pre className="font-mono text-sm bg-secondary p-4 rounded-lg border-2 border-border whitespace-pre-wrap break-words">
             {decrypted}
           </pre>
         </div>
       )}
 
-      <div className="bg-slate-700 border border-slate-600 rounded-lg p-4">
-        <h4 className="text-sm font-semibold text-slate-200 mb-2">Об аффинном шифре</h4>
-        <p className="text-sm text-slate-300">
-          Формула: <strong className="text-yellow-400">E(x) = (ax + b) mod 26</strong>. Параметр 'a' должен быть взаимно прост с 26.
+      <div className="bg-secondary border border-border rounded-lg p-4">
+        <h4 className="text-sm font-semibold text-foreground mb-2">Об аффинном шифре</h4>
+        <p className="text-sm text-muted-foreground">
+          Формула: <strong className="text-primary">E(x) = (ax + b) mod 26</strong>. Параметр 'a' должен быть взаимно прост с 26.
           Комбинирует умножение и сдвиг для более сложной замены.
         </p>
       </div>
@@ -259,7 +259,7 @@ function ROT13Cipher({ state, setState }: SubCipherProps<'rot13'>) {
   return (
     <div className="space-y-4">
       <div>
-        <label className="block text-sm font-semibold text-slate-300 mb-2">
+        <label className="block text-sm font-semibold text-muted-foreground mb-2">
           Текст
         </label>
         <textarea
@@ -267,25 +267,25 @@ function ROT13Cipher({ state, setState }: SubCipherProps<'rot13'>) {
           onChange={(e) => handleTextChange(e.target.value.toUpperCase())}
           placeholder="Введите текст..."
           rows={4}
-          className="w-full px-4 py-3 border-2 bg-slate-800 border-slate-600 rounded-lg focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400 outline-none transition-all resize-vertical font-mono text-sm text-slate-200"
+          className="w-full px-4 py-3 border-2 bg-background border-border rounded-lg focus:border-primary focus:ring-2 focus:ring-primary outline-none transition-all resize-vertical font-mono text-sm text-foreground"
         />
       </div>
 
       {text && (
         <div>
-          <label className="block text-sm font-semibold text-slate-300 mb-2">
+          <label className="block text-sm font-semibold text-muted-foreground mb-2">
             Результат (ROT13)
           </label>
-          <pre className="font-mono text-sm bg-slate-700 p-4 rounded-lg border-2 border-slate-600 whitespace-pre-wrap break-words">
+          <pre className="font-mono text-sm bg-secondary p-4 rounded-lg border-2 border-border whitespace-pre-wrap break-words">
             {result}
           </pre>
         </div>
       )}
 
-      <div className="bg-slate-700 border border-slate-600 rounded-lg p-4">
-        <h4 className="text-sm font-semibold text-slate-200 mb-2">О ROT13</h4>
-        <p className="text-sm text-slate-300">
-          <strong className="text-yellow-400">ROT13</strong> - это шифр Цезаря со сдвигом 13. Особенность: шифрование и дешифрование
+      <div className="bg-secondary border border-border rounded-lg p-4">
+        <h4 className="text-sm font-semibold text-foreground mb-2">О ROT13</h4>
+        <p className="text-sm text-muted-foreground">
+          <strong className="text-primary">ROT13</strong> - это шифр Цезаря со сдвигом 13. Особенность: шифрование и дешифрование
           идентичны (применение ROT13 дважды возвращает исходный текст). Часто использовался
           в форумах для скрытия спойлеров.
         </p>
@@ -315,14 +315,14 @@ function PlayfairCipher({ state, setState }: SubCipherProps<'playfair'>) {
           onChange={(e) => handleStateChange({ ciphertext: e.target.value })}
           placeholder="Текст..."
           rows={4}
-          className="w-full px-4 py-3 border-2 bg-slate-800 border-slate-600 rounded-lg focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400 outline-none transition-all resize-vertical font-mono text-sm text-slate-200 col-span-2"
+          className="w-full px-4 py-3 border-2 bg-background border-border rounded-lg focus:border-primary focus:ring-2 focus:ring-primary outline-none transition-all resize-vertical font-mono text-sm text-foreground col-span-2"
         />
         <input
           type="text"
           value={key}
           onChange={(e) => handleStateChange({ key: e.target.value })}
           placeholder="Ключ..."
-          className="w-full px-4 py-3 border-2 bg-slate-800 border-slate-600 rounded-lg focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400 outline-none transition-all font-mono text-sm text-slate-200 col-span-2"
+          className="w-full px-4 py-3 border-2 bg-background border-border rounded-lg focus:border-primary focus:ring-2 focus:ring-primary outline-none transition-all font-mono text-sm text-foreground col-span-2"
         />
       </div>
 
@@ -330,7 +330,7 @@ function PlayfairCipher({ state, setState }: SubCipherProps<'playfair'>) {
         <button
           onClick={() => setMode('encrypt')}
           className={`flex-1 px-4 py-2 rounded-lg transition-colors ${
-            mode === 'encrypt' ? 'bg-yellow-400 text-slate-900' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+            mode === 'encrypt' ? 'bg-primary text-primary-foreground' : 'bg-secondary text-muted-foreground hover:bg-secondary/80'
           }`}
         >
           Шифрование
@@ -338,7 +338,7 @@ function PlayfairCipher({ state, setState }: SubCipherProps<'playfair'>) {
         <button
           onClick={() => setMode('decrypt')}
           className={`flex-1 px-4 py-2 rounded-lg transition-colors ${
-            mode === 'decrypt' ? 'bg-yellow-400 text-slate-900' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+            mode === 'decrypt' ? 'bg-primary text-primary-foreground' : 'bg-secondary text-muted-foreground hover:bg-secondary/80'
           }`}
         >
           Дешифрование
@@ -347,22 +347,22 @@ function PlayfairCipher({ state, setState }: SubCipherProps<'playfair'>) {
 
       {result && (
         <div>
-          <label className="block text-sm font-semibold text-slate-300 mb-2">Результат:</label>
-          <pre className="font-mono text-sm bg-slate-700 p-4 rounded-lg border-2 border-slate-600 whitespace-pre-wrap break-words">
+          <label className="block text-sm font-semibold text-muted-foreground mb-2">Результат:</label>
+          <pre className="font-mono text-sm bg-secondary p-4 rounded-lg border-2 border-border whitespace-pre-wrap break-words">
             {result}
           </pre>
         </div>
       )}
 
-      <div className="bg-slate-700 border border-slate-600 rounded-lg p-4">
-        <h4 className="text-sm font-semibold text-slate-200 mb-2">О шифре Плейфера</h4>
-        <p className="text-sm text-slate-300 mb-2">
-          Использует <strong className="text-yellow-400">таблицу 5×5</strong>, заполненную ключевым словом и оставшимися буквами алфавита.
-          Шифрует пары букв (<strong className="text-yellow-400">биграммы</strong>).
+      <div className="bg-secondary border border-border rounded-lg p-4">
+        <h4 className="text-sm font-semibold text-foreground mb-2">О шифре Плейфера</h4>
+        <p className="text-sm text-muted-foreground mb-2">
+          Использует <strong className="text-primary">таблицу 5×5</strong>, заполненную ключевым словом и оставшимися буквами алфавита.
+          Шифрует пары букв (<strong className="text-primary">биграммы</strong>).
         </p>
-        <ul className="text-sm text-slate-300 space-y-1">
-          <li>• <strong className="text-yellow-400">I</strong> и <strong className="text-yellow-400">J</strong> считаются одной буквой</li>
-          <li>• Если буквы в паре одинаковые, вставляется <strong className="text-yellow-400">X</strong></li>
+        <ul className="text-sm text-muted-foreground space-y-1">
+          <li>• <strong className="text-primary">I</strong> и <strong className="text-primary">J</strong> считаются одной буквой</li>
+          <li>• Если буквы в паре одинаковые, вставляется <strong className="text-primary">X</strong></li>
           <li>• Правила замены зависят от позиций букв в таблице</li>
         </ul>
       </div>
@@ -406,7 +406,7 @@ function PolybiusCipher({ state, setState }: SubCipherProps<'polybius'>) {
   return (
     <div className="space-y-4">
       <div>
-        <label className="block text-sm font-semibold text-slate-300 mb-2">
+        <label className="block text-sm font-semibold text-muted-foreground mb-2">
           Зашифрованный текст (пары цифр)
         </label>
         <textarea
@@ -414,19 +414,19 @@ function PolybiusCipher({ state, setState }: SubCipherProps<'polybius'>) {
           onChange={(e) => handleTextChange(e.target.value)}
           placeholder="Например: 11 42 31 51 15..."
           rows={4}
-          className="w-full px-4 py-3 border-2 bg-slate-800 border-slate-600 rounded-lg focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400 outline-none transition-all resize-vertical font-mono text-sm text-slate-200"
+          className="w-full px-4 py-3 border-2 bg-background border-border rounded-lg focus:border-primary focus:ring-2 focus:ring-primary outline-none transition-all resize-vertical font-mono text-sm text-foreground"
         />
       </div>
 
-      <div className="bg-slate-700 p-4 rounded-lg border-2 border-slate-600">
-        <h4 className="text-sm font-semibold text-slate-200 mb-3">Таблица Полибия</h4>
+      <div className="bg-secondary p-4 rounded-lg border-2 border-border">
+        <h4 className="text-sm font-semibold text-foreground mb-3">Таблица Полибия</h4>
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
               <tr>
-                <th className="border border-slate-600 p-2 bg-slate-800 font-mono text-sm"></th>
+                <th className="border border-border p-2 bg-background font-mono text-sm"></th>
                 {[1, 2, 3, 4, 5].map((col) => (
-                  <th key={col} className="border border-slate-600 p-2 bg-slate-800 font-mono text-sm">
+                  <th key={col} className="border border-border p-2 bg-background font-mono text-sm">
                     {col}
                   </th>
                 ))}
@@ -435,13 +435,13 @@ function PolybiusCipher({ state, setState }: SubCipherProps<'polybius'>) {
             <tbody>
               {POLYBIUS_SQUARE.map((row, i) => (
                 <tr key={i}>
-                  <th className="border border-slate-600 p-2 bg-slate-800 font-mono text-sm">
+                  <th className="border border-border p-2 bg-background font-mono text-sm">
                     {i + 1}
                   </th>
                   {row.map((letter, j) => (
                     <td
                       key={j}
-                      className="border border-slate-600 p-2 text-center font-mono font-bold"
+                      className="border border-border p-2 text-center font-mono font-bold"
                     >
                       {letter}
                     </td>
@@ -451,27 +451,27 @@ function PolybiusCipher({ state, setState }: SubCipherProps<'polybius'>) {
             </tbody>
           </table>
         </div>
-        <p className="text-xs text-slate-400 mt-2">
-          <strong className="text-yellow-400">J</strong> объединена с <strong className="text-yellow-400">I</strong>. Каждая буква кодируется парой цифр (ряд, колонка).
+        <p className="text-xs text-muted-foreground mt-2">
+          <strong className="text-primary">J</strong> объединена с <strong className="text-primary">I</strong>. Каждая буква кодируется парой цифр (ряд, колонка).
         </p>
       </div>
 
       {ciphertext && (
         <div>
-          <label className="block text-sm font-semibold text-slate-300 mb-2">
+          <label className="block text-sm font-semibold text-muted-foreground mb-2">
             Расшифрованный текст
           </label>
-          <pre className="font-mono text-sm bg-slate-700 p-4 rounded-lg border-2 border-slate-600 whitespace-pre-wrap break-words">
+          <pre className="font-mono text-sm bg-secondary p-4 rounded-lg border-2 border-border whitespace-pre-wrap break-words">
             {decrypted}
           </pre>
         </div>
       )}
 
-      <div className="bg-slate-700 border border-slate-600 rounded-lg p-4">
-        <h4 className="text-sm font-semibold text-slate-200 mb-2">О квадрате Полибия</h4>
-        <p className="text-sm text-slate-300">
-          Древнегреческий шифр, где каждая буква заменяется на пару чисел (координаты в <strong className="text-yellow-400">таблице 5×5</strong>).
-          Например, <strong className="text-yellow-400">H = 23</strong> (ряд 2, колонка 3).
+      <div className="bg-secondary border border-border rounded-lg p-4">
+        <h4 className="text-sm font-semibold text-foreground mb-2">О квадрате Полибия</h4>
+        <p className="text-sm text-muted-foreground">
+          Древнегреческий шифр, где каждая буква заменяется на пару чисел (координаты в <strong className="text-primary">таблице 5×5</strong>).
+          Например, <strong className="text-primary">H = 23</strong> (ряд 2, колонка 3).
         </p>
       </div>
     </div>

@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  basePath: '/history-of-cryptography',
   output: 'export',
   typescript: {
     ignoreBuildErrors: true,

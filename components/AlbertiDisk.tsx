@@ -1,7 +1,10 @@
+import { useState } from 'react';
 import { CipherState } from '../types/cipher';
 
-const OUTER_RING = 'ABCDEFGHILMNOPQRSTVXZ1234';
-const INNER_RING = 'abcdefghilmnopqrstuvxyz&';
+const EN_OUTER_RING = 'ABCDEFGHILMNOPQRSTVXZ1234';
+const EN_INNER_RING = 'abcdefghilmnopqrstuvxyz&';
+const RU_OUTER_RING = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
+const RU_INNER_RING = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя';
 
 interface AlbertiDiskProps {
   state: CipherState['alberti'];
@@ -10,6 +13,10 @@ interface AlbertiDiskProps {
 
 export default function AlbertiDisk({ state, setState }: AlbertiDiskProps) {
   const { outerRotation, innerRotation, ciphertext, mode } = state;
+  const [language, setLanguage] = useState<'en' | 'ru'>('en');
+
+  const OUTER_RING = language === 'ru' ? RU_OUTER_RING : EN_OUTER_RING;
+  const INNER_RING = language === 'ru' ? RU_INNER_RING : EN_INNER_RING;
 
   const handleStateChange = (newState: Partial<CipherState['alberti']>) => {
     setState((prevState) => ({
@@ -65,7 +72,13 @@ export default function AlbertiDisk({ state, setState }: AlbertiDiskProps) {
       <div className="bg-card rounded-xl shadow-sm border border-border p-6">
         <div className="flex flex-col lg:flex-row gap-6">
           <div className="flex-1">
-            <h3 className="text-sm font-semibold text-muted-foreground mb-4">Визуализация дисков</h3>
+            <div className="flex justify-between items-center mb-4">
+                <h3 className="text-sm font-semibold text-muted-foreground">Визуализация дисков</h3>
+                <div className="flex gap-2">
+                    <button onClick={() => setLanguage('en')} className={`px-3 py-1 text-xs rounded-md ${language === 'en' ? 'bg-primary text-primary-foreground' : 'bg-secondary'}`}>EN</button>
+                    <button onClick={() => setLanguage('ru')} className={`px-3 py-1 text-xs rounded-md ${language === 'ru' ? 'bg-primary text-primary-foreground' : 'bg-secondary'}`}>RU</button>
+                </div>
+            </div>
 
             <div className="relative w-full max-w-md mx-auto aspect-square">
               <svg viewBox="0 0 400 400" className="w-full h-full">

@@ -1,4 +1,4 @@
-import { BookOpen, TrendingUp, Key, Shuffle } from 'lucide-react';
+import { BookOpen } from 'lucide-react';
 
 export default function TheorySection() {
   return (

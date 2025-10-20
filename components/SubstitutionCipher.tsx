@@ -203,16 +203,16 @@ export default function SubstitutionCipher({ state, setState }: SubstitutionCiph
                     Частота в зашифрованном тексте
                   </h4>
                   <div className="space-y-1">
-                    {frequencies.slice(0, 15).map(({ char, count, percentage }) => (
+                    {frequencies.slice(0, 15).map(({ letter: char, count, frequency: percentage }) => (
                       <div key={char} className="flex items-center gap-3">
                         <span className="font-mono font-bold text-sm w-6">{char}</span>
                         <div className="flex-1 bg-secondary rounded-full h-6 relative">
                           <div
                             className="bg-secondary h-6 rounded-full transition-all"
-                            style={{ width: `${percentage}%` }}
+                            style={{ width: `${percentage || 0}%` }}
                           />
                           <span className="absolute inset-0 flex items-center justify-center text-xs font-semibold text-secondary-foreground">
-                            {count} ({percentage.toFixed(1)}%)
+                            {count} ({(percentage || 0).toFixed(1)}%)
                           </span>
                         </div>
                       </div>
@@ -236,7 +236,7 @@ export default function SubstitutionCipher({ state, setState }: SubstitutionCiph
                               style={{ width: `${percentage}%` }}
                             />
                             <span className="absolute inset-0 flex items-center justify-center text-xs font-semibold text-secondary-foreground">
-                              {percentage.toFixed(1)}%)
+                              ({percentage.toFixed(1)}%)
                             </span>
                           </div>
                         </div>

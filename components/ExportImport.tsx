@@ -32,7 +32,7 @@ export default function ExportImport({ cipherState, setCipherState }: ExportImpo
         const imported = JSON.parse(e.target?.result as string)
         setCipherState(imported)
         alert("Данные успешно импортированы!")
-      } catch (error) {
+      } catch {
         alert("Ошибка при импорте данных. Проверьте формат файла.")
       }
     }

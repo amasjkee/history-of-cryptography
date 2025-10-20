@@ -1,30 +1,78 @@
-
-
 export function caesarShift(text: string, shift: number): string {
+  const russianAlphabetUpper = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
+  const russianAlphabetLower = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя';
+  const englishAlphabetUpper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const englishAlphabetLower = 'abcdefghijklmnopqrstuvwxyz';
+
   return text
     .split('')
     .map(char => {
-      const code = char.charCodeAt(0);
-      if (code >= 65 && code <= 90) {
-        return String.fromCharCode(((code - 65 + shift) % 26) + 65);
-      } else if (code >= 97 && code <= 122) {
-        return String.fromCharCode(((code - 97 + shift) % 26) + 97);
+      // Russian uppercase
+      let index = russianAlphabetUpper.indexOf(char);
+      if (index !== -1) {
+        const newIndex = (index + shift % 33 + 33) % 33;
+        return russianAlphabetUpper[newIndex];
       }
+
+      // Russian lowercase
+      index = russianAlphabetLower.indexOf(char);
+      if (index !== -1) {
+        const newIndex = (index + shift % 33 + 33) % 33;
+        return russianAlphabetLower[newIndex];
+      }
+
+      // English uppercase
+      index = englishAlphabetUpper.indexOf(char);
+      if (index !== -1) {
+        const newIndex = (index + shift % 26 + 26) % 26;
+        return englishAlphabetUpper[newIndex];
+      }
+
+      // English lowercase
+      index = englishAlphabetLower.indexOf(char);
+      if (index !== -1) {
+        const newIndex = (index + shift % 26 + 26) % 26;
+        return englishAlphabetLower[newIndex];
+      }
+
       return char;
     })
     .join('');
 }
 
 export function atbashCipher(text: string): string {
+  const russianAlphabetUpper = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
+  const russianAlphabetLower = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя';
+  const englishAlphabetUpper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const englishAlphabetLower = 'abcdefghijklmnopqrstuvwxyz';
+
   return text
     .split('')
     .map(char => {
-      const code = char.charCodeAt(0);
-      if (code >= 65 && code <= 90) {
-        return String.fromCharCode(90 - (code - 65));
-      } else if (code >= 97 && code <= 122) {
-        return String.fromCharCode(122 - (code - 97));
+      // Russian uppercase
+      let index = russianAlphabetUpper.indexOf(char);
+      if (index !== -1) {
+        return russianAlphabetUpper[32 - index];
       }
+
+      // Russian lowercase
+      index = russianAlphabetLower.indexOf(char);
+      if (index !== -1) {
+        return russianAlphabetLower[32 - index];
+      }
+
+      // English uppercase
+      index = englishAlphabetUpper.indexOf(char);
+      if (index !== -1) {
+        return englishAlphabetUpper[25 - index];
+      }
+
+      // English lowercase
+      index = englishAlphabetLower.indexOf(char);
+      if (index !== -1) {
+        return englishAlphabetLower[25 - index];
+      }
+
       return char;
     })
     .join('');
@@ -72,44 +120,68 @@ export function railFenceDecrypt(ciphertext: string, rails: number): string {
 }
 
 export function affineDecrypt(ciphertext: string, a: number, b: number): string {
+  const russianAlphabetUpper = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
+  const russianAlphabetLower = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя';
+  const englishAlphabetUpper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const englishAlphabetLower = 'abcdefghijklmnopqrstuvwxyz';
+
+  const isRussian = /[А-ЯЁ]/i.test(ciphertext);
+  const alphabetUpper = isRussian ? russianAlphabetUpper : englishAlphabetUpper;
+  const alphabetLower = isRussian ? russianAlphabetLower : englishAlphabetLower;
+  const alphabetSize = isRussian ? 33 : 26;
+
   let modInverse = -1;
-  for (let i = 0; i < 26; i++) {
-    if ((a * i) % 26 === 1) {
+  for (let i = 0; i < alphabetSize; i++) {
+    if ((a * i) % alphabetSize === 1) {
       modInverse = i;
       break;
     }
   }
 
   if (modInverse === -1) {
-    return 'Invalid \'a\' value';
+    return 'Invalid \'a\' value for the detected alphabet.';
   }
 
   return ciphertext
     .split('')
     .map(char => {
-      const code = char.charCodeAt(0);
-      if (code >= 65 && code <= 90) {
-        let num = code - 65;
-        num = (modInverse * (num - b + 26)) % 26;
-        return String.fromCharCode(num + 65);
-      } else if (code >= 97 && code <= 122) {
-        let num = code - 97;
-        num = (modInverse * (num - b + 26)) % 26;
-        return String.fromCharCode(num + 97);
+      // Uppercase
+      let index = alphabetUpper.indexOf(char);
+      if (index !== -1) {
+        const newIndex = (modInverse * (index - b + alphabetSize)) % alphabetSize;
+        return alphabetUpper[newIndex];
       }
+
+      // Lowercase
+      index = alphabetLower.indexOf(char);
+      if (index !== -1) {
+        const newIndex = (modInverse * (index - b + alphabetSize)) % alphabetSize;
+        return alphabetLower[newIndex];
+      }
+
       return char;
     })
     .join('');
 }
 
 export function playfairCipher(text: string, key: string, mode: 'encrypt' | 'decrypt'): string {
-    // This is a simplified implementation and may not handle all edge cases.
+    const isRussian = /[А-ЯЁ]/i.test(key) || /[А-ЯЁ]/i.test(text);
+
+    const gridSize = isRussian ? 6 : 5;
+    const alphabet = isRussian
+        ? 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ.,_'
+        : 'ABCDEFGHIKLMNOPQRSTUVWXYZ';
+
     const prepareKey = (key: string) => {
-        let keyUpper = key.toUpperCase().replace(/J/g, 'I').replace(/[^A-Z]/g, '');
-        let keySet = new Set(keyUpper.split(''));
-        let alphabet = 'ABCDEFGHIKLMNOPQRSTUVWXYZ';
+        let keyUpper = key.toUpperCase();
+        if (isRussian) {
+            keyUpper = keyUpper.replace(/[^А-ЯЁ.,_]/g, '');
+        } else {
+            keyUpper = keyUpper.replace(/J/g, 'I').replace(/[^A-Z]/g, '');
+        }
+        const keySet = new Set(keyUpper.split(''));
         let result = Array.from(keySet).join('');
-        for (let char of alphabet) {
+        for (const char of alphabet) {
             if (!keySet.has(char)) {
                 result += char;
             }
@@ -118,16 +190,16 @@ export function playfairCipher(text: string, key: string, mode: 'encrypt' | 'dec
     };
 
     const generateMatrix = (key: string) => {
-        let matrix = [];
-        for (let i = 0; i < 5; i++) {
-            matrix.push(key.slice(i * 5, i * 5 + 5).split(''));
+        const matrix = [];
+        for (let i = 0; i < gridSize; i++) {
+            matrix.push(key.slice(i * gridSize, i * gridSize + gridSize).split(''));
         }
         return matrix;
     };
 
     const findPos = (matrix: string[][], char: string) => {
-        for (let i = 0; i < 5; i++) {
-            for (let j = 0; j < 5; j++) {
+        for (let i = 0; i < gridSize; i++) {
+            for (let j = 0; j < gridSize; j++) {
                 if (matrix[i][j] === char) {
                     return { row: i, col: j };
                 }
@@ -138,13 +210,19 @@ export function playfairCipher(text: string, key: string, mode: 'encrypt' | 'dec
 
     const preparedKey = prepareKey(key);
     const matrix = generateMatrix(preparedKey);
-    let textUpper = text.toUpperCase().replace(/J/g, 'I').replace(/[^A-Z]/g, '');
+    let textUpper = text.toUpperCase();
+    if (isRussian) {
+        textUpper = textUpper.replace(/[^А-ЯЁ.,_]/g, '');
+    } else {
+        textUpper = textUpper.replace(/J/g, 'I').replace(/[^A-Z]/g, '');
+    }
+
     let result = '';
 
     if (mode === 'encrypt') {
-        let pairs = [];
+        const pairs = [];
         for (let i = 0; i < textUpper.length; i += 2) {
-            let p1 = textUpper[i];
+            const p1 = textUpper[i];
             let p2 = (i + 1 < textUpper.length) ? textUpper[i + 1] : 'X';
             if (p1 === p2) {
                 p2 = 'X';
@@ -153,18 +231,18 @@ export function playfairCipher(text: string, key: string, mode: 'encrypt' | 'dec
             pairs.push(p1 + p2);
         }
 
-        for (let pair of pairs) {
-            let p1 = pair[0];
-            let p2 = pair[1];
-            let pos1 = findPos(matrix, p1);
-            let pos2 = findPos(matrix, p2);
+        for (const pair of pairs) {
+            const p1 = pair[0];
+            const p2 = pair[1];
+            const pos1 = findPos(matrix, p1);
+            const pos2 = findPos(matrix, p2);
 
             if (pos1.row === pos2.row) {
-                result += matrix[pos1.row][(pos1.col + 1) % 5];
-                result += matrix[pos2.row][(pos2.col + 1) % 5];
+                result += matrix[pos1.row][(pos1.col + 1) % gridSize];
+                result += matrix[pos2.row][(pos2.col + 1) % gridSize];
             } else if (pos1.col === pos2.col) {
-                result += matrix[(pos1.row + 1) % 5][pos1.col];
-                result += matrix[(pos2.row + 1) % 5][pos2.col];
+                result += matrix[(pos1.row + 1) % gridSize][pos1.col];
+                result += matrix[(pos2.row + 1) % gridSize][pos2.col];
             } else {
                 result += matrix[pos1.row][pos2.col];
                 result += matrix[pos2.row][pos1.col];
@@ -172,17 +250,17 @@ export function playfairCipher(text: string, key: string, mode: 'encrypt' | 'dec
         }
     } else { // decrypt
         for (let i = 0; i < textUpper.length; i += 2) {
-            let p1 = textUpper[i];
-            let p2 = textUpper[i + 1];
-            let pos1 = findPos(matrix, p1);
-            let pos2 = findPos(matrix, p2);
+            const p1 = textUpper[i];
+            const p2 = textUpper[i + 1];
+            const pos1 = findPos(matrix, p1);
+            const pos2 = findPos(matrix, p2);
 
             if (pos1.row === pos2.row) {
-                result += matrix[pos1.row][(pos1.col + 4) % 5];
-                result += matrix[pos2.row][(pos2.col + 4) % 5];
+                result += matrix[pos1.row][(pos1.col + gridSize - 1) % gridSize];
+                result += matrix[pos2.row][(pos2.col + gridSize - 1) % gridSize];
             } else if (pos1.col === pos2.col) {
-                result += matrix[(pos1.row + 4) % 5][pos1.col];
-                result += matrix[(pos2.row + 4) % 5][pos2.col];
+                result += matrix[(pos1.row + gridSize - 1) % gridSize][pos1.col];
+                result += matrix[(pos2.row + gridSize - 1) % gridSize][pos2.col];
             } else {
                 result += matrix[pos1.row][pos2.col];
                 result += matrix[pos2.row][pos1.col];
@@ -194,33 +272,44 @@ export function playfairCipher(text: string, key: string, mode: 'encrypt' | 'dec
 
 function normalizeText(text: string): string {
     // Converts text to uppercase and removes any non-alphabetic characters.
-    return text.toUpperCase().replace(/[^A-Z]/g, '');
+    return text.toUpperCase().replace(/[^A-ZА-ЯЁ]/g, '');
 }
 
 export function vigenereDecrypt(ciphertext: string, keyword: string): string {
+    const russianAlphabetUpper = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
+    const englishAlphabetUpper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
     const normalizedCiphertext = normalizeText(ciphertext);
     const normalizedKeyword = normalizeText(keyword);
     let decryptedText = '';
 
     if (normalizedKeyword.length === 0) {
-        // If the keyword is empty, decryption is not possible.
         return ciphertext;
     }
 
     for (let i = 0; i < normalizedCiphertext.length; i++) {
         const cipherChar = normalizedCiphertext[i];
-        // Cycle through the keyword for each character in the ciphertext.
         const keyChar = normalizedKeyword[i % normalizedKeyword.length];
 
-        // Convert characters to 0-25 scale (A=0, B=1, ..., Z=25).
-        const cipherValue = cipherChar.charCodeAt(0) - 'A'.charCodeAt(0);
-        const keyValue = keyChar.charCodeAt(0) - 'A'.charCodeAt(0);
+        let alphabet, alphabetSize;
+        if (russianAlphabetUpper.includes(cipherChar)) {
+            alphabet = russianAlphabetUpper;
+            alphabetSize = 33;
+        } else {
+            alphabet = englishAlphabetUpper;
+            alphabetSize = 26;
+        }
 
-        // Vigenere decryption formula: (C - K + 26) % 26
-        // Adding 26 before modulo handles negative results from (C - K).
-        const decryptedValue = (cipherValue - keyValue + 26) % 26;
-        // Convert the numerical value back to a character.
-        const decryptedChar = String.fromCharCode(decryptedValue + 'A'.charCodeAt(0));
+        const cipherValue = alphabet.indexOf(cipherChar);
+        const keyValue = alphabet.indexOf(keyChar);
+
+        if (cipherValue === -1 || keyValue === -1) {
+            decryptedText += cipherChar;
+            continue;
+        }
+
+        const decryptedValue = (cipherValue - keyValue + alphabetSize) % alphabetSize;
+        const decryptedChar = alphabet[decryptedValue];
         decryptedText += decryptedChar;
     }
 

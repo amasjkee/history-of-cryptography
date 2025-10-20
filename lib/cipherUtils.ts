@@ -198,6 +198,7 @@ export function playfairCipher(text: string, key: string, mode: 'encrypt' | 'dec
     };
 
     const findPos = (matrix: string[][], char: string) => {
+        if (!char) return { row: -1, col: -1 };
         for (let i = 0; i < gridSize; i++) {
             for (let j = 0; j < gridSize; j++) {
                 if (matrix[i][j] === char) {
@@ -237,6 +238,11 @@ export function playfairCipher(text: string, key: string, mode: 'encrypt' | 'dec
             const pos1 = findPos(matrix, p1);
             const pos2 = findPos(matrix, p2);
 
+            if (pos1.row === -1 || pos2.row === -1) {
+                result += p1 + p2;
+                continue;
+            }
+
             if (pos1.row === pos2.row) {
                 result += matrix[pos1.row][(pos1.col + 1) % gridSize];
                 result += matrix[pos2.row][(pos2.col + 1) % gridSize];
@@ -249,11 +255,20 @@ export function playfairCipher(text: string, key: string, mode: 'encrypt' | 'dec
             }
         }
     } else { // decrypt
+        if (textUpper.length % 2 !== 0) {
+            textUpper = textUpper.slice(0, -1);
+        }
         for (let i = 0; i < textUpper.length; i += 2) {
             const p1 = textUpper[i];
             const p2 = textUpper[i + 1];
+            
             const pos1 = findPos(matrix, p1);
             const pos2 = findPos(matrix, p2);
+
+            if (pos1.row === -1 || pos2.row === -1) {
+                result += p1 + p2;
+                continue;
+            }
 
             if (pos1.row === pos2.row) {
                 result += matrix[pos1.row][(pos1.col + gridSize - 1) % gridSize];
